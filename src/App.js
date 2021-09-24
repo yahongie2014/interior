@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { connect } from "react-redux";
+import Home from "./containers/Home";
+import About from "./containers/About";
+import AppLayout from "./components/AppLayout";
+import { Route, Switch, withRouter } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    componentDidMount() {
+    this.loadYoutubeApi();
+  }
+
+  loadYoutubeApi() {
+    const script = document.createElement("script");
+    script.src = "https://apis.google.com/js/client.js";
+
+    script.onload = () => {
+      window.gapi.load('client', () => {
+        window.gapi.client.setApiKey(API_KEY);
+        window.gapi.client.load('youtube', 'v3', () => {
+          this.props.youtubeLibraryLoaded();
+        });
+      });
+    };
+
+    document.body.appendChild(script);
+  }
 }
 
-export default App;
+  render() {
+    return (
+      <AppLayout>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/about" component={About} />
+        </Switch>
+      </AppLayout>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {};
+}
+
+function mapDispatchToProps(dispatch) {
+  return {};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
