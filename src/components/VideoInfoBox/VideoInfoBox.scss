@@ -1,4 +1,4 @@
-@import '../../styles/shared.scss';
+@import "../../assets/shared";
 
 .video-info-box {
   display: grid;
@@ -33,7 +33,6 @@
   }
 
   .video-description {
-
     max-width: 615px;
     grid-row: 2 / 3;
     grid-column: 2 / 3;

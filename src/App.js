@@ -1,17 +1,35 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react";
 import Home from "./containers/Home";
-import Trending from "./containers/Trending";
-import AppLayout from "./components/AppLayout";
+import { AppLayout } from "./components/AppLayout";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Watch from "./containers/Watch";
-import Search from "./containers/Search";
 import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import { youtubeLibraryLoaded } from "./store/actions/api";
+import Trending from "./containers/Trending";
+import Search from "./containers/Search";
 
 const API_KEY = "AIzaSyCpGnl9FtGEDIfait5i0tqm_rdvgTrc2IA";
 
-class App extends React.Component {
+class App extends Component {
+  render() {
+    return (
+      <AppLayout>
+        <Switch>
+          <Route path="/feed/trending" component={Trending} />
+          <Route
+            path="/results"
+            render={() => <Search key={this.props.location.key} />}
+          />
+          <Route
+            path="/watch"
+            render={() => <Watch key={this.props.location.key} />}
+          />
+          <Route path="/" component={Home} />
+        </Switch>
+      </AppLayout>
+    );
+  }
   componentDidMount() {
     this.loadYoutubeApi();
   }
@@ -30,25 +48,6 @@ class App extends React.Component {
     };
 
     document.body.appendChild(script);
-  }
-
-  render() {
-    return (
-      <AppLayout>
-        <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/feed/trending" component={Trending} />
-          <Route
-            path="/results"
-            render={() => <Search key={this.props.location.key} />}
-          />
-          <Route
-            path="/watch"
-            render={() => <Watch key={this.props.location.key} />}
-          />
-        </Switch>
-      </AppLayout>
-    );
   }
 }
 
