@@ -1,9 +1,9 @@
-import {SUCCESS} from '../actions';
-import {WATCH_DETAILS} from '../actions/watch';
-import {COMMENT_THREAD_LIST_RESPONSE} from '../api/youtube-api-response-types';
-import {createSelector} from 'reselect';
-import {COMMENT_THREAD} from '../actions/comment';
-import {getSearchParam} from '../../services/url';
+import { SUCCESS } from "../actions";
+import { WATCH_DETAILS } from "../actions/watch";
+import { COMMENT_THREAD_LIST_RESPONSE } from "../api/youtube-api-response-types";
+import { createSelector } from "reselect";
+import { COMMENT_THREAD } from "../actions/comment";
+import { getSearchParam } from "../../services/url";
 
 const initialState = {
   byVideo: {},
@@ -21,7 +21,9 @@ export default function (state = initialState, action) {
 }
 
 function reduceWatchDetails(responses, videoId, prevState) {
-  const commentThreadResponse = responses.find(res => res.result.kind === COMMENT_THREAD_LIST_RESPONSE);
+  const commentThreadResponse = responses.find(
+    (res) => res.result.kind === COMMENT_THREAD_LIST_RESPONSE
+  );
   return reduceCommentThread(commentThreadResponse.result, videoId, prevState);
 }
 
@@ -36,7 +38,9 @@ function reduceCommentThread(response, videoId, prevState) {
 
   // if we have already fetched some comments for a particular video
   // we just append the ids for the new comments
-  const prevCommentIds = prevState.byVideo[videoId] ? prevState.byVideo[videoId].ids : [];
+  const prevCommentIds = prevState.byVideo[videoId]
+    ? prevState.byVideo[videoId].ids
+    : [];
   const commentIds = [...prevCommentIds, ...Object.keys(newComments)];
 
   const byVideoComment = {
@@ -53,12 +57,12 @@ function reduceCommentThread(response, videoId, prevState) {
     byVideo: {
       ...prevState.byVideo,
       [videoId]: byVideoComment,
-    }
+    },
   };
 }
 
 /*
-* Selectors
+ * Selectors
  */
 const getCommentIdsForVideo = (state, videoId) => {
   const comment = state.comments.byVideo[videoId];
@@ -69,19 +73,16 @@ const getCommentIdsForVideo = (state, videoId) => {
 };
 export const getCommentsForVideo = createSelector(
   getCommentIdsForVideo,
-  state => state.comments.byId,
+  (state) => state.comments.byId,
   (commentIds, allComments) => {
-    return commentIds.map(commentId => allComments[commentId]);
+    return commentIds.map((commentId) => allComments[commentId]);
   }
 );
 
 const getComment = (state, location) => {
-  const videoId = getSearchParam(location, 'v');
+  const videoId = getSearchParam(location, "v");
   return state.comments.byVideo[videoId];
 };
-export const getCommentNextPageToken = createSelector(
-  getComment,
-  (comment) => {
-    return comment ? comment.nextPageToken : null;
-  }
-);
+export const getCommentNextPageToken = createSelector(getComment, (comment) => {
+  return comment ? comment.nextPageToken : null;
+});
