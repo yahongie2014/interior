@@ -1,11 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import Home from "./containers/Home";
-import About from "./containers/About";
+import Trending from "./containers/Trending";
 import AppLayout from "./components/AppLayout";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Watch from "./containers/Watch";
 import Search from "./containers/Search";
+import { bindActionCreators } from "redux";
+import { youtubeLibraryLoaded } from "./store/actions/api";
 
 const API_KEY = "AIzaSyCpGnl9FtGEDIfait5i0tqm_rdvgTrc2IA";
 
@@ -35,7 +37,7 @@ class App extends React.Component {
       <AppLayout>
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/about" component={About} />
+          <Route path="/feed/trending" component={Trending} />
           <Route
             path="/results"
             render={() => <Search key={this.props.location.key} />}
@@ -50,12 +52,8 @@ class App extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {};
-}
-
 function mapDispatchToProps(dispatch) {
-  return {};
+  return bindActionCreators({ youtubeLibraryLoaded }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(null, mapDispatchToProps)(App));
